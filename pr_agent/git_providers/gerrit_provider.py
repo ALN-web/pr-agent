@@ -179,7 +179,9 @@ def add_suggestion(src_filename, context: str, start, end: int):
     # `git diff` holds only the suggestion: no CRLF-to-LF rewrite and no mode change.
     with open(src_filename, "r", encoding="utf-8", newline="") as src:
         lines = src.readlines()
-    if context and lines and lines[0].endswith("\r\n"):
+    # Match the ending of the first replaced line, falling back to the first line.
+    anchor = lines[start - 1] if 0 < start <= len(lines) else (lines[0] if lines else "")
+    if context and anchor.endswith("\r\n"):
         context = context.replace("\r\n", "\n").replace("\n", "\r\n")
     with open(src_filename, "w", encoding="utf-8", newline="") as dst:
         dst.writelines(lines[:start - 1])

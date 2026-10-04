@@ -413,6 +413,15 @@ def test_add_suggestion_replaces_only_the_suggested_lines(tmp_path, eol):
     assert src.read_bytes() == f"a{eol}B1{eol}B2{eol}c{eol}".encode()
 
 
+def test_add_suggestion_matches_the_replaced_lines_in_a_mixed_ending_file(tmp_path):
+    src = tmp_path / "app.py"
+    src.write_bytes(b"a\nb\r\nc\n")
+
+    gerrit_provider.add_suggestion(src, "B\n", 2, 2)
+
+    assert src.read_bytes() == b"a\nB\r\nc\n"
+
+
 @pytest.mark.skipif(sys.platform == "win32", reason="POSIX file modes")
 def test_add_suggestion_keeps_the_file_mode(tmp_path):
     src = tmp_path / "run.sh"
