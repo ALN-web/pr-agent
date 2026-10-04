@@ -315,8 +315,8 @@ def test_publish_comment_skips_temporary(tmp_path):
 
 
 def test_publish_description_writes_utf8_regardless_of_locale(tmp_path, monkeypatch):
-    # /describe output carries emoji (e.g. the usage guide header). Simulate a
-    # Windows cp1252 locale, where open() without an explicit encoding fails on them.
+    # Simulate a Windows cp1252 locale so an open() without an explicit encoding
+    # fails on the emoji that /describe output carries (e.g. the usage guide header).
     def cp1252_default_open(file, mode="r", *args, **kwargs):
         if "b" not in mode:
             kwargs.setdefault("encoding", "cp1252")
