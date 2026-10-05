@@ -426,10 +426,10 @@ def test_add_suggestion_matches_the_replaced_lines_in_a_mixed_ending_file(tmp_pa
 def test_add_suggestion_keeps_the_file_mode(tmp_path):
     src = tmp_path / "run.sh"
     src.write_bytes(b"echo a\necho b\n")
-    os.chmod(src, 0o755)
+    os.chmod(src, 0o700)
 
     gerrit_provider.add_suggestion(src, "echo B\n", 2, 2)
 
     # Check the executable bit survives, so the patch carries no mode change.
-    assert os.stat(src).st_mode & 0o777 == 0o755
+    assert os.stat(src).st_mode & 0o777 == 0o700
     assert src.read_bytes() == b"echo a\necho B\n"
